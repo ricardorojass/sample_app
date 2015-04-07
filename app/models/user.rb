@@ -6,9 +6,8 @@ class User < ActiveRecord::Base
   validates :email, presence: true, length: { maximum: 255 },
                     format: { with: VALID_EMAIL_REGEX },
                     uniqueness: {case_sensitive: false}
-
   has_secure_password
-  validates :password, length: { minimum: 6 }
+  validates :password, length: { minimum: 6 }, allow_blank: true
 
   # Returns the hash digest of the given string.
   def User.digest(string)
@@ -18,7 +17,9 @@ class User < ActiveRecord::Base
   end
 
   # Returns a random token.
-  SecureRandom.urlsafe_base64
+  def User.new_token
+    SecureRandom.urlsafe_base64
+  end
 
   # Remembers a user in the database for use in persistent sessions.
   def remember
@@ -30,11 +31,6 @@ class User < ActiveRecord::Base
   def authenticated?(remember_token)
     return false if remember_digest.nil?
     BCrypt::Password.new(remember_digest).is_password?(remember_token)
-  end
-
-  # Returns  a random token.
-  def User.new_token
-    SecureRandom.urlsafe_base64
   end
 
   # Forgets a user
