@@ -24,6 +24,7 @@ ActiveRecord::Schema.define(version: 20150414210259) do
     t.string   "picture"
   end
 
+  add_index "microposts", ["user_id", "created_at"], name: "index_microposts_on_user_id_and_created_at", using: :btree
   add_index "microposts", ["user_id"], name: "index_microposts_on_user_id", using: :btree
 
   create_table "users", force: :cascade do |t|
